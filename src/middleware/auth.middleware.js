@@ -1,12 +1,14 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 
-const JWT_SECRET = "UpFJfpWKYteH5rMHSxst"; // Hardcoded secret
+const JWT_SECRET = "UpFJfpWKYteH5rMHSxst";
 
 export const protectRoute = async (req, res, next) => {
   try {
-    const token = req.cookies.jwt;
+    let token = req.cookies.jwt || (req.headers.authorization?.startsWith("Bearer") && req.headers.authorization.split(" ")[1]);
 
+
+    // Если нет токена
     if (!token) {
       return res.status(401).json({ message: "Unauthorized - No Token Provided" });
     }
